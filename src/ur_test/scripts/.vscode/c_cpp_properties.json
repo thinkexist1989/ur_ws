@@ -1,0 +1,22 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/think/catkin_ws/devel/include",
+        "/opt/ros/kinetic/include",
+        "/home/think/catkin_ws/src/Universal_Robots_ROS_Driver/controller_stopper/include",
+        "/home/think/catkin_ws/src/staubli_stack/staubli_test/include",
+        "/home/think/catkin_ws/src/Universal_Robots_ROS_Driver/ur_calibration/include",
+        "/home/think/catkin_ws/src/Universal_Robots_ROS_Driver/ur_controllers/include",
+        "/home/think/catkin_ws/src/fmauch_universal_robot/ur_kinematics/include",
+        "/home/think/catkin_ws/src/Universal_Robots_ROS_Driver/ur_robot_driver/include",
+        "/usr/include"
+      ],
+      "name": "Linux"
+    }
+  ]
+}
