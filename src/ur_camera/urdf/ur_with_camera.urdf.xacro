@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="ur_with_camera" >
+
+  <!-- common stuff -->
+  <xacro:include filename="$(find ur_e_description)/urdf/common.gazebo.xacro" />
+
+  <!-- ur5e -->
+  <xacro:include filename="$(find ur_e_description)/urdf/ur5e.urdf.xacro" />
+
+  <xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro" />
+
+  <xacro:property name="M_PI" value="3.1415926535897931" />
+  <!-- arm -->
+  <xacro:arg name="kinematics_config" default="$(find ur_e_description)/config/ur5e_default.yaml"/>
+  <xacro:ur5e_robot prefix="" joint_limited="false"
+    kinematics_file="${load_yaml('$(arg kinematics_config)')}"
+    />
+
+  <link name="connect_link" />
+  <joint name="connect_link_tool0" type="fixed">
+    <origin xyz="-0.05 0 0.015" rpy="0 ${radians(-90)} 0"/>
+    <parent link="tool0"/>
+    <child link="connect_link"/>
+  </joint>
+
+  <sensor_d435 parent="connect_link">
+    <orgin xyz="0 0 0" rpy="0 0 0"/>
+  </sensor_d435>
+
+  <link name="world" />
+
+  <joint name="world_joint" type="fixed">
+    <parent link="world" />
+    <child link = "base_link" />
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+  </joint>
+
+</robot>

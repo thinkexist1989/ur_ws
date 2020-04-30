@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.rog/wiki/xacro">
+    <gazebo reference="connect_link">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <xacro:macro name="realsense_ir_gazebo" params="link_name frame_name camera_name">
+        <gazebo reference="${link_name}">
+            <sensor type="depth" name="realsense_ir_sensor">
+                <always_on>true</always_on>
+                <update_rate>60</update_rate>
+                <camera>
+                    <horizontal_fov>1.047</horizontal_fov>
+                    <image>
+                        <format>L8</format>
+                        <width>640</width>
+                        <height>480</height>
+                    </image>
+                    <clip>
+                        <near>0.1</near>
+                        <far>100</far>
+                    </clip>
+                </camera>
+                <plugin name="${link_name}_controller"
+
+            </sensor>
+        </gazebo>
+    </xacro:macro>
+
+</robot>
