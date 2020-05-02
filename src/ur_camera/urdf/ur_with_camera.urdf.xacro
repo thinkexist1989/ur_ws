@@ -9,6 +9,8 @@
 
   <xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro" />
 
+  <xacro:include filename="$(find ur_camera)/urdf/realsense.gazebo.urdf.xacro"/>
+
   <xacro:property name="M_PI" value="3.1415926535897931" />
   <!-- arm -->
   <xacro:arg name="kinematics_config" default="$(find ur_e_description)/config/ur5e_default.yaml"/>
@@ -35,4 +37,5 @@
     <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
   </joint>
 
+  <xacro:realsense_gazebo link_name="camera_depth_frame" frame_name="realsense_optical_frame" camera_name="camera" />
 </robot>
