@@ -53,7 +53,8 @@ int main(int argc, char** argv)
 
     //Planning to a Pose goal
     geometry_msgs::Pose target_pose1;
-    target_pose1.orientation = tf::createQuaternionMsgFromRollPitchYaw(0,0,0);
+    // target_pose1.orientation = tf::createQuaternionMsgFromRollPitchYaw(0,0,0);
+    target_pose1.orientation.w = 1.0;
     target_pose1.position.x = 0.7;
     target_pose1.position.y = 0.0;
     target_pose1.position.z = 0.7;
@@ -73,8 +74,66 @@ int main(int argc, char** argv)
 
     move_group.move();
 
-    visual_tools.prompt("Press 'next' to draw circle...");
+    visual_tools.prompt("Press 'next' to joint-space goal...");
+
+    moveit::core::RobotStatePtr current_state = move_group.getCurrentState();
+
+    //
+    std::vector<double> joint_group_positions;
+    current_state->copyJointGroupPositions(joint_model_group, joint_group_positions);
+
+    joint_group_positions[0] = -1.0;
+    move_group.setJointValueTarget(joint_group_positions);
+
+    success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+
+    move_group.move();
+
+    visual_tools.deleteAllMarkers();
+    visual_tools.publishText(text_pose, "Joint Space Goal", rvt::WHITE, rvt::XLARGE);
+    visual_tools.publishTrajectoryLine(my_plan.trajectory_, joint_model_group);
+    visual_tools.trigger();
+    visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to continue the demo");
+
     // std::cout << "....continued." << std::endl;
+
+
+    robot_state::RobotState start_state(*move_group.getCurrentState());
+    geometry_msgs::Pose start_pose2;
+    start_pose2 = move_group.getCurrentPose().pose;
+    start_pose2.orientation.w = 1.0;
+    // start_pose2.position.x = 0.7;
+    // start_pose2.position.y = 0.0;
+    // start_pose2.position.z = 0.5;
+    start_state.setFromIK(joint_model_group,start_pose2);
+    move_group.setStartState(start_state);
+
+    move_group.setPoseTarget(target_pose1);
+
+    move_group.setPlanningTime(10.0);
+
+        //Planning with Path Constraints
+    moveit_msgs::OrientationConstraint ocm;
+    ocm.link_name = "ee_link";
+    ocm.header.frame_id = "base_link";
+    ocm.orientation.w = 1.0;
+    ocm.absolute_x_axis_tolerance = 0.1;
+    ocm.absolute_y_axis_tolerance = 0.1;
+    ocm.absolute_z_axis_tolerance = 0.1;
+    ocm.weight = 1;
+
+    moveit_msgs::Constraints test_constraints;
+    test_constraints.orientation_constraints.push_back(ocm);
+    move_group.setPathConstraints(test_constraints);
+
+    success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+
+    ROS_INFO_NAMED("tutorials", "plan with path constraints %s", success?"SUCCESS":"FAILED");
+
+    // move_group.move();
+    
+
+
     ros::shutdown();
     
     return 0;
