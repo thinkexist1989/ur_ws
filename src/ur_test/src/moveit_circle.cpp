@@ -82,7 +82,7 @@ int main(int argc, char** argv)
     std::vector<double> joint_group_positions;
     current_state->copyJointGroupPositions(joint_model_group, joint_group_positions);
 
-    joint_group_positions[0] = -1.0;
+    joint_group_positions[0] = -0.2;
     move_group.setJointValueTarget(joint_group_positions);
 
     success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
@@ -130,8 +130,9 @@ int main(int argc, char** argv)
 
     ROS_INFO_NAMED("tutorials", "plan with path constraints %s", success?"SUCCESS":"FAILED");
 
-    // move_group.move();
-    
+    move_group.move();
+
+    visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to finish the demo");
 
 
     ros::shutdown();

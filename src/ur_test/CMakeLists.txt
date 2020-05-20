@@ -1,8 +1,17 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.1)
 project(ur_test)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-add_compile_options(-std=c++11)
+# add_compile_options(-std=c++11)
+set(CMAKE_CXX_STANDARD 11)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+# Instruct cmake to run moc automatically when needed
+set(CMAKE_AUTOMOC ON)
+# Create code from a list of Qt designer ui files
+set(CMAKE_AUTOUIC ON)
+
+set(CMAKE_AUTORCC ON)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -26,6 +35,11 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_eigen
   tf2_geometry_msgs
 )
+
+
+find_package(Qt5 REQUIRED Core Widgets)
+
+find_package(OpenCV REQUIRED)
 
 find_package(Boost REQUIRED system filesystem date_time thread)
 
@@ -141,6 +155,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIR}
   ${EIGEN3_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 link_directories(${catkin_LIBRARY_DIRS})
@@ -161,6 +176,8 @@ link_directories(${catkin_LIBRARY_DIRS})
 # add_executable(${PROJECT_NAME}_node src/ur_test_node.cpp)
 
 add_executable(move_group_circle src/moveit_circle.cpp)
+add_executable(move_group_triangle src/moveit_triangle.cpp)
+add_executable(qt_dialog_test src/qt_dialog_test.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -178,6 +195,8 @@ add_executable(move_group_circle src/moveit_circle.cpp)
 # )
 
 target_link_libraries(move_group_circle ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(move_group_triangle ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(qt_dialog_test Qt5::Widgets ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 #############
 ## Install ##
