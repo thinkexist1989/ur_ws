@@ -2,6 +2,17 @@
 Changelog for package ur_kinematics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.2.7 (2019-11-23)
+------------------
+* Modernize python 2 codes (`#457 <https://github.com/ros-industrial/universal_robot/issues/457>`_)
+* Contributors: cclauss, gavanderhoorn
+
+1.2.6 (2019-11-19)
+------------------
+* Simplify FK equations (`#372 <https://github.com/ros-industrial/universal_robot/issues/372>`_)
+* Migrated all package.xml files to format=2 (`#439 <https://github.com/ros-industrial/universal_robot/issues/439>`_)
+* Contributors: Felix Mauch, Levi Armstrong, Qiang Qiu
+
 1.2.5 (2019-04-05)
 ------------------
 * Update maintainer listing: add Miguel (`#410 <https://github.com/ros-industrial/universal_robot/issues/410>`_)
