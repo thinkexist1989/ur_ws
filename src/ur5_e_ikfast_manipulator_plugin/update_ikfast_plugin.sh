@@ -1,0 +1,1 @@
+rosrun moveit_kinematics create_ikfast_moveit_plugin.py ur5_e manipulator ur5_e_ikfast_manipulator_plugin /home/think/ur_ws/src/ur5_e_ikfast_manipulator_plugin/src/ur5_e_manipulator_ikfast_solver.cpp

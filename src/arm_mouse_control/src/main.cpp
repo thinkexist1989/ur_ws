@@ -20,7 +20,7 @@ moveit::planning_interface::MoveGroupInterface* move_group_ptr;
 
 geometry_msgs::Pose currentPose;
 
-std::vector<geometry_msgs::Pose> waypoints;
+// std::vector<geometry_msgs::Pose> waypoints;
 
 Eigen::Matrix3f trans;
 
@@ -80,12 +80,35 @@ void mouseHandler(int event, int x, int y, int flags, void *ustc) //event鼠标�
         pose.position.z = 0.70 + ur(1)/1000.0;
         std::cout << pose.position.y << std::endl;
         std::cout << pose.position.z << std::endl;
-        // std::vector<geometry_msgs::Pose> waypoints;
-        waypoints.push_back(pose);
-        pose.position.x = 0.75;
-        waypoints.push_back(pose);
+        move_group_ptr->setPoseTarget(pose);
+        moveit::planning_interface::MoveGroupInterface::Plan my_plan;
+        bool success = (move_group_ptr->plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
 
-        currentPose = move_group_ptr->getCurrentPose().pose;
+        move_group_ptr->move();  
+
+        pose.position.x = 0.75;
+
+        move_group_ptr->setPoseTarget(pose);
+        success = (move_group_ptr->plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+
+        move_group_ptr->move();  
+
+        // // std::vector<geometry_msgs::Pose> waypoints;
+        // std::vector<geometry_msgs::Pose> waypoints;
+        // // waypoints.push_back(pose);
+        // pose.position.x = 0.75;
+        // waypoints.push_back(pose);
+
+        // moveit_msgs::RobotTrajectory trajectory;
+        // const double jump_threshold = 0.0;
+        // const double eef_step = 0.01;
+        // double fraction = move_group_ptr->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
+        // ROS_INFO_NAMED("arm_control_gui", "Cartesian Path %.2f%% is achieved.", fraction*100);
+        // moveit::planning_interface::MoveGroupInterface::Plan plan;
+        // plan.trajectory_ = trajectory;
+        // move_group_ptr->execute(plan);
+
+        // currentPose = move_group_ptr->getCurrentPose().pose;
     }
     else if (event == CV_EVENT_MOUSEMOVE && !(flags & CV_EVENT_FLAG_LBUTTON)) //左键没有按下的情况下鼠标移动的处理函数
     {
@@ -97,33 +120,39 @@ void mouseHandler(int event, int x, int y, int flags, void *ustc) //event鼠标�
         pose.position.x = 0.75;
         pose.position.y = 0.0 + ur(0)/1000.0;
         pose.position.z = 0.70 + ur(1)/1000.0;
-        waypoints.push_back(pose);        
-        // cartesian_move_once(move_group_ptr, 0.75, ur(0), 0.70+ur(1));
+        move_group_ptr->setPoseTarget(pose);
+        moveit::planning_interface::MoveGroupInterface::Plan my_plan;
+        bool success = (move_group_ptr->plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
         ROS_INFO_NAMED("arm_mouse_control", "Moving... x is: %d, y is: %d .", x, y);
 
-
-
-        
+        move_group_ptr->move();     
 
     }
     else if (event == CV_EVENT_LBUTTONUP) //左键松开，机械臂向-x方向退回0.1m
     {
-        currentPose = move_group_ptr->getCurrentPose().pose;
         // cartesian_move_once(move_group_ptr, 0.7, currentPose.position.y, currentPose.position.z);
         geometry_msgs::Pose pose = move_group_ptr->getCurrentPose().pose;
         pose.position.x = 0.70;
 
-        waypoints.push_back(pose); 
+        move_group_ptr->setPoseTarget(pose);
+        moveit::planning_interface::MoveGroupInterface::Plan my_plan;
+        bool success = (move_group_ptr->plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
 
-        moveit_msgs::RobotTrajectory trajectory;
-        const double jump_threshold = 0.0;
-        const double eef_step = 0.01;
-        double fraction = move_group_ptr->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
-        ROS_INFO_NAMED("arm_control_gui", "Cartesian Path %.2f%% is achieved.", fraction*100);
-        moveit::planning_interface::MoveGroupInterface::Plan plan;
-        plan.trajectory_ = trajectory;
-        move_group_ptr->execute(plan);
-        waypoints.clear();
+        move_group_ptr->move();
+
+
+        // std::vector<geometry_msgs::Pose> waypoints;
+        // waypoints.push_back(pose); 
+
+        // moveit_msgs::RobotTrajectory trajectory;
+        // const double jump_threshold = 0.0;
+        // const double eef_step = 0.01;
+        // double fraction = move_group_ptr->computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
+        // ROS_INFO_NAMED("arm_control_gui", "Cartesian Path %.2f%% is achieved.", fraction*100);
+        // moveit::planning_interface::MoveGroupInterface::Plan plan;
+        // plan.trajectory_ = trajectory;
+        // move_group_ptr->execute(plan);
+        // waypoints.clear();
     }
 }
 int main(int argc, char** argv)
