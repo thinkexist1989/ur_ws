@@ -1,0 +1,20 @@
+<launch>
+  
+  <!-- start ur5e    /-->
+    <include file="$(find ur_robot_driver)/launch/ur5e_bringup.launch">
+        <arg name="limited" value="true" />
+        <arg name="robot_ip" value="192.168.1.102" />
+    </include>
+    
+
+  <include file="$(find ur5_e_moveit_config)/launch/ur5_e_moveit_planning_execution.launch">
+        <arg name ="limited" value="true"/>
+  </include>
+  
+  <include file="$(find ur5_e_moveit_config)/launch/moveit_rviz.launch">
+        <arg name="config" value="true" /> 
+  </include>
+  
+  <rosparam command="load" file="$(find plan)/config/param.yaml" />
+</launch>
+

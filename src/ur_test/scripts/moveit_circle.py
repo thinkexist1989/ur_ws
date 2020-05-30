@@ -37,9 +37,9 @@ class MoveItCartesianDemo:
 
         # center of the circle
         center_pose = Pose()
-        center_pose.position.x = 0.7
+        center_pose.position.x = 0.35
         center_pose.position.y = 0.0
-        center_pose.position.z = 0.7
+        center_pose.position.z = 0.8
         q = quaternion_from_euler(np.deg2rad(0), np.deg2rad(0), np.deg2rad(0))
         center_pose.orientation = Quaternion(*q)
 

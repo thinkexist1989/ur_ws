@@ -1,0 +1,48 @@
+<launch>
+
+
+    <!--  USB serial
+     ls -l /dev/ttyUSB*
+     sudo chmod a+rw /dev/ttyUSB0 -->
+    <group ns = "robotiq">
+        <include file="$(find robotiq_85_bringup)/launch/robotiq_85.launch"/>
+    </group>
+<!--    &lt;!&ndash; 10.1.1.198 &ndash;&gt;-->
+<!--    <include file="$(find cortex_bridge)/launch/cortex_bridge.launch"/>-->
+
+<!--    &lt;!&ndash; 10.1.1.179 &ndash;&gt;-->
+    <group ns = "UR5e">
+<!--        <include file="$(find ur_modern_driver)/launch/ur5e_bringup.launch"/>-->
+        <include file="$(find ur_modern_driver)/launch/ur5e_ros_control.launch"/>
+    </group>
+
+
+    <!--<node pkg="tf" type="static_transform_publisher" name="tf_map2base_link"-->
+    <!--args="0.3 -0.2 0.8249 1.5708 0 0 map base_link 1000" />-
+    <!-<node pkg="tf" type="static_transform_publisher" name="tf_map2base_link"-->
+          <!--args="0.132503 0.238787 -0.818065  -1.57535  0.00177465 -0.0138208  base_link map  1000" />-->
+
+    <!--<node name="rviz_screw" pkg="rviz" type="rviz" args="-d $(find screw_bolt)/config/rviz_screw.rviz">-->
+    <!--</node>-->
+
+
+
+    <rosparam command="load" file="$(find catch_control)/config/env_param.yaml" />
+
+    <node pkg="tf" type="static_transform_publisher" name="gripper2tool0"
+          args="0 0 0 0 -1.570796327 0  tool0 gripper_root_link  1000" />
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find catch_control)/config/catch_bottle.rviz">
+    </node>
+
+<!--    <node pkg="catch_control" type="serialport_cmd" name="serialport_cmd" />-->
+
+    <!-- base_link is fixed. Markers is relative to map-->
+<!--    <node pkg="tf" type="static_transform_publisher" name="base2map"-->
+<!--    args="0.310028 -0.412027 0.0397502 0.000413926 -0.000457995 -0.704761 0.709444 map base_link  500" />-->
+
+<!--    <node pkg="tf" type="static_transform_publisher" name="base2map"-->
+<!--          args="0.376272 -0.321799 0.0396726 -0.0001191 -0.000309095 -0.70524 0.708969  map base_link  1000" />-->
+    <node pkg="tf" type="static_transform_publisher" name="base2map"
+          args="-0.323803 -0.374581 -0.0393763 0.0001191 0.000309095 0.70524 0.708969 base_link map  500" />
+</launch>
