@@ -34,7 +34,7 @@ int main(int argc, char **argv)
     }
 
     //UR5e.move_joints(joint_start,1.0);
-    // UR5e.servoj_moveto(joint_start, 6, true);
+    UR5e.servoj_moveto(joint_start, 6, true);
     ROS_INFO_STREAM("star");
 
     getchar();

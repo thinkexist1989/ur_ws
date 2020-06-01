@@ -8,6 +8,7 @@ project(plan)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(Eigen3 REQUIRED)
+find_package(orocos_kdl REQUIRED)
 
 if(NOT EIGEN3_INCLUDE_DIRS)
   set(EIGEN3_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
@@ -131,9 +132,9 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  include ${catkin_INCLUDE_DIRS}
- include
- ${catkin_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
+  ${orocos_kdl_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -260,5 +261,7 @@ add_executable(MyRobot
 add_dependencies(MyRobot ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(MyRobot
   ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ${orocos_kdl_LIBRARIES}
 )
 

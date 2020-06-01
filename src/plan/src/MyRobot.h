@@ -93,7 +93,10 @@ private:
         //      current_JntCur_ = jntCur;
 
         //fk
-        p_fk_solver_->JntToCart(current_JntArr_, frame_wrist3_base_); //frame_wrist3_base_ 为正运动学计算出的位姿
+        // std::cout << "rows is : " << jntArr.rows() << "chain: " << chain.getNrOfJoints() << std::endl;
+        int r = p_fk_solver_->JntToCart(jntArr, frame_wrist3_base_); //frame_wrist3_base_ 为正运动学计算出的位姿
+        if (r < 0)
+            std::cout << "Something went wrong! " << r << std::endl;
         // end_point_.data[0] = frame_wrist3_base_.p.data[0];
         // end_point_.data[1] = frame_wrist3_base_.p.data[1];
         // end_point_.data[2] = frame_wrist3_base_.p.data[2];
@@ -108,7 +111,7 @@ private:
         // ROS_INFO("bur_sub_ = true");
         double roll, pitch, yaw;
         frame_wrist3_base_.M.GetRPY(roll, pitch, yaw);
-        ROS_INFO("j1: %f, j2: %f, j3: %f, j4: %f, j5: %f, j6: %f", current_JntArr_(0), current_JntArr_(1), current_JntArr_(2), current_JntArr_(3), current_JntArr_(4), current_JntArr_(5));
+        // ROS_INFO("j1: %f, j2: %f, j3: %f, j4: %f, j5: %f, j6: %f", current_JntArr_(0), current_JntArr_(1), current_JntArr_(2), current_JntArr_(3), current_JntArr_(4), current_JntArr_(5));
         ROS_INFO("roll: %f, pitch: %f, yaw: %f", roll, pitch, yaw);
         ROS_INFO("x: %f, y: %f, z: %f", frame_wrist3_base_.p.data[0], frame_wrist3_base_.p.data[1], frame_wrist3_base_.p.data[2]);
     }
@@ -141,6 +144,8 @@ private:
     ros::NodeHandle nh_;
     TRAC_IK::TRAC_IK *p_tracik_solver_;
     KDL::ChainFkSolverPos_recursive *p_fk_solver_;
+    KDL::Chain chain;
+
     Client *client_;
     Client *client_servoj_;
     std::vector<std::string> joint_names_;
@@ -174,11 +179,11 @@ MyRobot::MyRobot(ros::NodeHandle _nh, const std::string &_urdf_param, const std:
     double eps = 1e-5;
     nh_ = _nh;
     p_tracik_solver_ = new TRAC_IK::TRAC_IK(_chain_start, _chain_end, _urdf_param, _timeout, eps); //反解
-    KDL::Chain chain;
     bool valid = p_tracik_solver_->getKDLChain(chain);
     p_fk_solver_ = new KDL::ChainFkSolverPos_recursive(chain); //正解
 
     ROS_INFO("Chain has %d joints", chain.getNrOfJoints());
+
     //TRAC_IK::TRAC_IK tracik_solver(_chain_start, _chain_end, _urdf_param, _timeout, eps);
 
     if (!valid)
