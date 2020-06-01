@@ -39,7 +39,7 @@ int main(int argc, char** argv)
     visual_tools.loadRemoteControl();
 
     //RViz提供了多种marker， text, cylinders, spheres
-    Eigen::Affine3d text_pose = Eigen::Affine3d::Identity();
+    Eigen::Isometry3d text_pose = Eigen::Isometry3d::Identity();
     text_pose.translation().z() = 1.75;
     visual_tools.publishText(text_pose, "MoveGroupInterface Demo", rvt::WHITE,rvt::XLARGE);
 

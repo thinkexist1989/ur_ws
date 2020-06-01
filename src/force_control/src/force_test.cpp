@@ -18,7 +18,7 @@
 #include <geometry_msgs/WrenchStamped.h>
 #include <force_control/forcecontrol_msg.h>
 
-#include <moveit/move_group_interface/move_group.h>
+// #include <moveit/move_group_interface/move_group.h>
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <vector>
 const double PI = 3.14;

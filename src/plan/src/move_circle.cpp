@@ -3,7 +3,7 @@
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
 #include <tf/transform_broadcaster.h>
-#include <moveit/move_group_interface/move_group.h>
+// #include <moveit/move_group_interface/move_group.h>
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit_msgs/DisplayTrajectory.h>
 #include <Eigen/Core>

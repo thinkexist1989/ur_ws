@@ -1,4 +1,5 @@
-#include <moveit/move_group_interface/move_group.h>  //MoveIt的头文件，API接口
+// #include <moveit/move_group_interface/move_group.h>  //MoveIt的头文件，API接口
+#include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/planning_scene_interface/planning_scene_interface.h>
 #include <moveit_msgs/DisplayRobotState.h>
 #include <moveit_msgs/DisplayTrajectory.h>
@@ -58,7 +59,7 @@ void dispersed(double pt1[3],double pt2[3])
         group.setPoseTarget(target_pose);  
         //group.move();
     
-        moveit::planning_interface::MoveGroup::Plan goal_plan;
+        moveit::planning_interface::MoveGroupInterface::Plan goal_plan;
         
         if(group.plan(goal_plan))
         {

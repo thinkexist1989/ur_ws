@@ -1,4 +1,4 @@
-#include <moveit/move_group_interface/move_group.h>
+// #include <moveit/move_group_interface/move_group.h>
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit_msgs/DisplayTrajectory.h>
 const double PI = M_PI;
@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 
     // Perform the planning step, and if it succeeds display the current
     // arm trajectory and move the arm
-    moveit::planning_interface::MoveGroup::Plan goal_plan;
+    moveit::planning_interface::MoveGroupInterface::Plan goal_plan;
     if (plan_group.plan(goal_plan))
     {
         moveit_msgs::DisplayTrajectory display_msg;
