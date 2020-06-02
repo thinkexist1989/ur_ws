@@ -20,6 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
     std_msgs
     control_msgs
     trajectory_msgs
+    sensor_msgs
     actionlib_msgs
     trac_ik_lib
 )
@@ -127,12 +128,12 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-    include
+    ${PROJECT_SOURCE_DIR}/include
     ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
-add_library(robot_motion STATIC
+add_library(robot_motion SHARED
   src/RobotMotion.cpp
 )
 
