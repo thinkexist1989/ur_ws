@@ -9,6 +9,16 @@ RobotMotion::RobotMotion(ros::NodeHandle nh_, std::string chainStart_, std::stri
                                                                                                                                           _maxiter(1),
                                                                                                                                           _nrOfJoints(0)
 {
+    _joint_names.push_back("shoulder_pan_joint");
+    _joint_names.push_back("shoulder_lift_joint");
+    _joint_names.push_back("elbow_joint");
+    _joint_names.push_back("wrist_1_joint");
+    _joint_names.push_back("wrist_2_joint");
+    _joint_names.push_back("wrist_3_joint");
+}
+
+void RobotMotion::init()
+{
     if (!_nh.ok())
     {
         ROS_ERROR("ROS Node Handler is not OK!");
@@ -47,7 +57,7 @@ RobotMotion::RobotMotion(ros::NodeHandle nh_, std::string chainStart_, std::stri
 
     if (_nrOfJoints != _joint_names.size())
     {
-        ROS_ERROR("The number of joints in chain is not equal to that in joint_names");
+        ROS_ERROR("The number of joints in chain is %d, not equal to that in joint_names %d", _nrOfJoints, _joint_names.size());
         return;
     }
 
@@ -57,18 +67,14 @@ RobotMotion::RobotMotion(ros::NodeHandle nh_, std::string chainStart_, std::stri
 
     subJntState = _nh.subscribe(JOINT_STATES, 1, &RobotMotion::subJntStatesCallback, this);
     subWrench = _nh.subscribe(WRENCH, 1, &RobotMotion::subWrenchCallback, this);
-
-    _joint_names.push_back("shoulder_pan_joint");
-    _joint_names.push_back("shoulder_lift_joint");
-    _joint_names.push_back("elbow_joint");
-    _joint_names.push_back("wrist_1_joint");
-    _joint_names.push_back("wrist_2_joint");
-    _joint_names.push_back("wrist_3_joint");
 }
 
 void RobotMotion::setJointNames(std::vector<std::string> joint_names_)
 {
+    _joint_names.clear();
     _joint_names = joint_names_;
+
+    ROS_INFO("Joint names have been changed to %d", _joint_names.size());
 }
 
 void RobotMotion::subJntStatesCallback(const sensor_msgs::JointState::ConstPtr &msg) // callback function of /joint_states
@@ -108,14 +114,26 @@ void RobotMotion::subJntStatesCallback(const sensor_msgs::JointState::ConstPtr &
 
     int res = _fkSolverPtr->JntToCart(currentJntStates, currentEndPose);
 
-    ROS_INFO("j1: %f, j2: %f, j3: %f, j4: %f, j5: %f, j6: %f", currentJntStates(0), currentJntStates(1), currentJntStates(2), currentJntStates(3), currentJntStates(4), currentJntStates(5));
+    // ROS_INFO("j1: %f, j2: %f, j3: %f, j4: %f, j5: %f, j6: %f", currentJntStates(0), currentJntStates(1), currentJntStates(2), currentJntStates(3), currentJntStates(4), currentJntStates(5));
 
-    double roll, pitch, yaw;
-    currentEndPose.M.GetRPY(roll, pitch, yaw);
-    ROS_INFO("roll: %f, pitch: %f, yaw: %f", roll, pitch, yaw);
-    ROS_INFO("x: %f, y: %f, z: %f", currentEndPose.p.data[0], currentEndPose.p.data[1], currentEndPose.p.data[2]);
+    // double roll, pitch, yaw;
+    // currentEndPose.M.GetRPY(roll, pitch, yaw);
+    // ROS_INFO("roll: %f, pitch: %f, yaw: %f", roll, pitch, yaw);
+    // ROS_INFO("x: %f, y: %f, z: %f", currentEndPose.p.data[0], currentEndPose.p.data[1], currentEndPose.p.data[2]);
 }
 
 void RobotMotion::subWrenchCallback(const geometry_msgs::WrenchStamped::ConstPtr &msg) //callback funtion of /wrench
 {
+    KDL::Wrench wrench_;
+    wrench_.force = KDL::Vector(msg->wrench.force.x, msg->wrench.force.y, msg->wrench.force.z);
+    wrench_.torque = KDL::Vector(msg->wrench.torque.x, msg->wrench.torque.y, msg->wrench.torque.z);
+    // KDL::Rotation wrench2base = KDL::Rotation::RPY(0, 0, M_PI);
+    // KDL::Rotation wrench2base = KDL::Rotation::RPY(0, -M_PI_2, 0) * KDL::Rotation::RPY(0, 0, M_PI_2);
+    // KDL::Rotation wrench2base = KDL::Rotation::RPY(M_PI_2, 0, M_PI_2);
+    // currentEndWrench.force = wrench2base * wrench_.force;
+    // currentEndWrench.torque = wrench2base * wrench_.torque;
+
+    currentEndWrench = wrench_;
+
+    ROS_INFO("fx: %f, fy: %f, fz: %f, tx: %f, ty: %f, tz: %f", currentEndWrench.force.x(), currentEndWrench.force.y(), currentEndWrench.force.z(), currentEndWrench.torque.x(), currentEndWrench.torque.y(), currentEndWrench.torque.z());
 }

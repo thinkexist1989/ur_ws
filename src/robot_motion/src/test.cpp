@@ -18,6 +18,7 @@ int main(int argc, char **argv)
     joint_names.push_back("wrist_3_joint");
 
     ur5e.setJointNames(joint_names);
+    ur5e.init();
 
     ros::AsyncSpinner spinner(1);
     spinner.start();

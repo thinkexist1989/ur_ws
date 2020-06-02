@@ -25,6 +25,8 @@ public:
 
     void setJointNames(std::vector<std::string> joint_names_); // 设置_joint_names
 
+    void init();
+
     std::unique_ptr<Client> jntTrajPtr; // Follow Joint Trajectory Action Client Pointer
     ros::Subscriber subJntState;        // subscribe /joint_states
     ros::Subscriber subWrench;          // subscribe /wrench
@@ -34,6 +36,8 @@ public:
     KDL::JntArray currentJntEfforts; // current joint efforts
 
     KDL::Frame currentEndPose; // current chainEnd pose
+
+    KDL::Wrench currentEndWrench; // current end Wrench
 
 private:
     ros::NodeHandle _nh;                                            // ROS NodeHandler
