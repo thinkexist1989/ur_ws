@@ -12,12 +12,15 @@
 #include <eigen3/Eigen/Eigen>
 #include <iostream>
 
+#include <RobotMotion.hpp>
+
 #define PLANNING_GROUP "manipulator"
 #define JUMP_THESHOLD 0.0
 #define EEF_STEP 0.01
 
-namespace Ui {
-class MainWindow;
+namespace Ui
+{
+    class MainWindow;
 }
 
 class MainWindow : public QMainWindow
@@ -31,12 +34,12 @@ public:
     ros::NodeHandle n;
     ros::AsyncSpinner spinner;
 
-    
+    RobotMotion *ur5e;
+
     moveit::planning_interface::MoveGroupInterface move_group;
-    const moveit::core::JointModelGroup* joint_model_group_ptr;
+    const moveit::core::JointModelGroup *joint_model_group_ptr;
 
     void cartesian_move(double x_step, double y_step, double z_step);
-
 
 private:
     Ui::MainWindow *ui;
@@ -46,6 +49,7 @@ public slots:
     void on_buttonDown_clicked();
     void on_buttonLeft_clicked();
     void on_buttonRight_clicked();
+    void on_buttonInit_clicked();
 };
 
 #endif // MAINWINDOW_H

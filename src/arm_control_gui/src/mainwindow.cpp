@@ -2,14 +2,28 @@
 #include "ui_mainwindow.h"
 #include <iostream>
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    spinner(1),
-    move_group(PLANNING_GROUP)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
+                                          ui(new Ui::MainWindow),
+                                          spinner(2),
+                                          move_group(PLANNING_GROUP)
 {
     ui->setupUi(this);
     spinner.start();
+
+    ur5e = new RobotMotion(n);
+
+    //init joint_name
+    std::vector<std::string> joint_names;
+    joint_names.push_back("shoulder_pan_joint");
+    joint_names.push_back("shoulder_lift_joint");
+    joint_names.push_back("elbow_joint");
+
+    joint_names.push_back("wrist_1_joint");
+    joint_names.push_back("wrist_2_joint");
+    joint_names.push_back("wrist_3_joint");
+
+    ur5e->setJointNames(joint_names);
+    ur5e->init();
 
     joint_model_group_ptr = move_group.getCurrentState()->getJointModelGroup(PLANNING_GROUP);
 
@@ -25,7 +39,6 @@ MainWindow::MainWindow(QWidget *parent) :
     move_group.setPoseTarget(start_pose);
 
     move_group.move();
-
 }
 
 MainWindow::~MainWindow()
@@ -33,7 +46,6 @@ MainWindow::~MainWindow()
     delete ui;
     ros::shutdown();
 }
-
 
 void MainWindow::on_buttonUp_clicked()
 {
@@ -70,8 +82,19 @@ void MainWindow::cartesian_move(double x_step, double y_step, double z_step)
     waypoints.push_back(pose);
     moveit_msgs::RobotTrajectory trajectory;
     double fraction = move_group.computeCartesianPath(waypoints, EEF_STEP, JUMP_THESHOLD, trajectory);
-    ROS_INFO_NAMED("arm_control_gui", "Cartesian Path %.2f%% is achieved.", fraction*100);
+    ROS_INFO_NAMED("arm_control_gui", "Cartesian Path %.2f%% is achieved.", fraction * 100);
     moveit::planning_interface::MoveGroupInterface::Plan plan;
     plan.trajectory_ = trajectory;
     move_group.execute(plan);
+}
+
+void MainWindow::on_buttonInit_clicked()
+{
+    KDL::JntArray joint_start(6);
+    joint_start.data << -0.29629, -2.04182, -1.863, -0.855, 1.53311, 0.090;
+    std::vector<KDL::JntArray> jntArrVec;
+    std::vector<double> time_from_start;
+    jntArrVec.push_back(joint_start);
+    time_from_start.push_back(6.0);
+    ur5e->MoveJ(jntArrVec, time_from_start);
 }

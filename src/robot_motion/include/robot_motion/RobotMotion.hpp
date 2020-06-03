@@ -7,6 +7,8 @@
 #include <eigen3/Eigen/Eigen>                         // Eigen3头文件
 #include <actionlib/client/simple_action_client.h>    // SimpleActionClient头文件
 #include <control_msgs/FollowJointTrajectoryAction.h> // follow joint trajectory action头文件
+#include <trajectory_msgs/JointTrajectory.h>          //follow_joint_trajectory_action_goal 需要的头文件
+#include <trajectory_msgs/JointTrajectoryPoint.h>     //JointTrajectory头文件
 #include <sensor_msgs/JointState.h>                   // sensor_msgs::JointState头文件
 #include <geometry_msgs/WrenchStamped.h>              //geometry_msgs::WrenchStamped头文件
 #include <vector>
@@ -27,9 +29,8 @@ public:
 
     void init();
 
-    std::unique_ptr<Client> jntTrajPtr; // Follow Joint Trajectory Action Client Pointer
-    ros::Subscriber subJntState;        // subscribe /joint_states
-    ros::Subscriber subWrench;          // subscribe /wrench
+    ros::Subscriber subJntState; // subscribe /joint_states
+    ros::Subscriber subWrench;   // subscribe /wrench
 
     KDL::JntArray currentJntStates;  // current joint states
     KDL::JntArray currentJntSpeeds;  // current joint speeds
@@ -37,7 +38,10 @@ public:
 
     KDL::Frame currentEndPose; // current chainEnd pose
 
-    KDL::Wrench currentEndWrench; // current end Wrench
+    KDL::Wrench currentEndWrench;  // current end Wrench
+    KDL::Wrench wrenchCalibration; // wrench calibration
+
+    void MoveJ(std::vector<KDL::JntArray> &jntArrVec, std::vector<double> &times); // MoveJ 关节空间移动
 
 private:
     ros::NodeHandle _nh;                                            // ROS NodeHandler
@@ -46,6 +50,8 @@ private:
     std::unique_ptr<KDL::ChainFkSolverPos_recursive> _fkSolverPtr;  // KDL FK Solver Pointer
     std::unique_ptr<KDL::ChainIkSolverVel_pinv> _kdlVelIkSolverPtr; //KDL PseudoInverse Velocity Solver
     std::unique_ptr<KDL::ChainIkSolverPos_NR_JL> _kdlIkSolverPtr;   // KDL IK Sovler Pointer
+
+    std::unique_ptr<Client> _jntTrajPtr; // Follow Joint Trajectory Action Client Pointer
 
     std::string _chainStart; // chain start default is "base_link"
     std::string _chainEnd;   // chain end default is "tool0"

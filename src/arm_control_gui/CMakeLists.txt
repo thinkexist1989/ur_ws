@@ -28,7 +28,15 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
   tf2_eigen
   tf2_geometry_msgs
+  trac_ik_lib
+  control_msgs
+  trajectory_msgs
+  sensor_msgs
+  actionlib_msgs
+  actionlib
 )
+
+find_package(orocos_kdl REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
@@ -160,6 +168,7 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
   ${PROJECT_SOURCE_DIR}/src
+  ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}
 )
 
 ## Declare a C++ library
@@ -179,6 +188,7 @@ add_executable(${PROJECT_NAME}_node
   ${QT_SRC} 
   ${QT_UI} 
   ${QT_HEADER}
+  src/RobotMotion.cpp
 )
 
 ## Rename C++ executable without prefix

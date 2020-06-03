@@ -1,4 +1,4 @@
-#include "robot_motion/RobotMotion.hpp"
+#include "RobotMotion.hpp"
 
 int main(int argc, char **argv)
 {
@@ -20,9 +20,16 @@ int main(int argc, char **argv)
     ur5e.setJointNames(joint_names);
     ur5e.init();
 
-    ros::AsyncSpinner spinner(1);
+    ros::AsyncSpinner spinner(0);
     spinner.start();
 
+    KDL::JntArray joint_start(6);
+    joint_start.data << -0.29629, -2.04182, -1.863, -0.855, 1.53311, 0.090;
+    std::vector<KDL::JntArray> jntArrVec;
+    std::vector<double> time_from_start;
+    jntArrVec.push_back(joint_start);
+    time_from_start.push_back(50.0);
+    ur5e.MoveJ(jntArrVec, time_from_start);
     while (ros::ok())
         ;
 

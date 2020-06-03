@@ -1,4 +1,4 @@
-#include "robot_motion/RobotMotion.hpp"
+#include "RobotMotion.hpp"
 
 RobotMotion::RobotMotion(ros::NodeHandle nh_, std::string chainStart_, std::string chainEnd_, double timeout_, std::string urdf_param_) : _nh(nh_),
                                                                                                                                           _chainStart(chainStart_),
@@ -15,6 +15,9 @@ RobotMotion::RobotMotion(ros::NodeHandle nh_, std::string chainStart_, std::stri
     _joint_names.push_back("wrist_1_joint");
     _joint_names.push_back("wrist_2_joint");
     _joint_names.push_back("wrist_3_joint");
+
+    wrenchCalibration.force = KDL::Vector(0, 0, 0); //力传感器矫正
+    wrenchCalibration.torque = KDL::Vector(0, 0, 0);
 }
 
 void RobotMotion::init()
@@ -67,6 +70,17 @@ void RobotMotion::init()
 
     subJntState = _nh.subscribe(JOINT_STATES, 1, &RobotMotion::subJntStatesCallback, this);
     subWrench = _nh.subscribe(WRENCH, 1, &RobotMotion::subWrenchCallback, this);
+
+    _jntTrajPtr.reset(new Client(JOINTTRAJECTORY));
+    ROS_INFO("Waiting for follow_joint_trajectory_action server to start...");
+    if (_jntTrajPtr->waitForServer(ros::Duration(1.0)))
+    {
+        ROS_INFO("Server connected");
+    }
+    else
+    {
+        ROS_ERROR("No Server connected");
+    }
 }
 
 void RobotMotion::setJointNames(std::vector<std::string> joint_names_)
@@ -89,7 +103,7 @@ void RobotMotion::subJntStatesCallback(const sensor_msgs::JointState::ConstPtr &
         return;
     }
 
-    std::map<std::string, int> map; // 临时存储未对应的关节名
+    // std::map<std::string, int> map; // 临时存储未对应的关节名
 
     for (int i = 0; i < _nrOfJoints; i++)
     {
@@ -125,15 +139,70 @@ void RobotMotion::subJntStatesCallback(const sensor_msgs::JointState::ConstPtr &
 void RobotMotion::subWrenchCallback(const geometry_msgs::WrenchStamped::ConstPtr &msg) //callback funtion of /wrench
 {
     KDL::Wrench wrench_;
+    // wrench_.force = KDL::Vector(msg->wrench.force.z, -msg->wrench.force.x, -msg->wrench.force.y);
+    // wrench_.torque = KDL::Vector(msg->wrench.torque.z, -msg->wrench.torque.x, -msg->wrench.torque.y);
     wrench_.force = KDL::Vector(msg->wrench.force.x, msg->wrench.force.y, msg->wrench.force.z);
     wrench_.torque = KDL::Vector(msg->wrench.torque.x, msg->wrench.torque.y, msg->wrench.torque.z);
     // KDL::Rotation wrench2base = KDL::Rotation::RPY(0, 0, M_PI);
     // KDL::Rotation wrench2base = KDL::Rotation::RPY(0, -M_PI_2, 0) * KDL::Rotation::RPY(0, 0, M_PI_2);
-    // KDL::Rotation wrench2base = KDL::Rotation::RPY(M_PI_2, 0, M_PI_2);
+    // KDL::Rotation wrench2base = KDL::Rotation::RPY(M_PI_2, -M_PI_2, 0);
     // currentEndWrench.force = wrench2base * wrench_.force;
     // currentEndWrench.torque = wrench2base * wrench_.torque;
 
     currentEndWrench = wrench_;
 
-    ROS_INFO("fx: %f, fy: %f, fz: %f, tx: %f, ty: %f, tz: %f", currentEndWrench.force.x(), currentEndWrench.force.y(), currentEndWrench.force.z(), currentEndWrench.torque.x(), currentEndWrench.torque.y(), currentEndWrench.torque.z());
+    // ROS_INFO("fx: %f, fy: %f, fz: %f, tx: %f, ty: %f, tz: %f", currentEndWrench.force.x(), currentEndWrench.force.y(), currentEndWrench.force.z(), currentEndWrench.torque.x(), currentEndWrench.torque.y(), currentEndWrench.torque.z());
+}
+
+//control_msgs/FollowJointTrajectoryGoal
+// -trajectory_msgs/JointTrajectory trajectory
+//    -std_msgs/Header header
+//      -uint32 seq
+//      -time stamp
+//      -string frame_id
+//    -string[] joint_names
+//    -trajectory_msgs/JointTrajectoryPoint[] points
+//      -float64[] positions
+//      -float64[] velocities
+//      -float64[] accelerations
+//      -float64[] effort
+//      -duration time_from_start
+// -control_msgs/JointTolerance[] path_tolerance
+//    -string name
+//    -float64 position
+//    -float64 velocity
+//    -float64 acceleration
+//- control_msgs/JointTolerance[] goal_tolerance
+//    -string name
+//    -float64 position
+//    -float64 velocity
+//    -float64 acceleration
+// -duration goal_time_tolerance
+void RobotMotion::MoveJ(std::vector<KDL::JntArray> &jntArrVec, std::vector<double> &time_from_start)
+{
+    if (jntArrVec.size() != time_from_start.size())
+    {
+        ROS_ERROR("ERROR::ACTION::GOAL SIZE IS NOT EQUAL");
+        return;
+    }
+
+    control_msgs::FollowJointTrajectoryGoal g; //action goal
+
+    for (int i = 0; i < jntArrVec.size(); i++)
+    {
+        trajectory_msgs::JointTrajectoryPoint p;
+        for (int j = 0; j < _nrOfJoints; j++)
+        {
+            p.positions.push_back(jntArrVec[i](j));
+            // p.velocities.push_back(0);
+        }
+        p.time_from_start = ros::Duration(time_from_start[i]);
+
+        g.trajectory.points.push_back(p);
+    }
+
+    g.trajectory.header.stamp = ros::Time::now();
+    g.trajectory.joint_names = _joint_names;
+
+    _jntTrajPtr->sendGoal(g);
 }

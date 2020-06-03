@@ -22,6 +22,7 @@ find_package(catkin REQUIRED COMPONENTS
     trajectory_msgs
     sensor_msgs
     actionlib_msgs
+    actionlib
     trac_ik_lib
 )
 
@@ -128,7 +129,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}
     ${catkin_INCLUDE_DIRS}
 )
 
@@ -138,6 +139,10 @@ add_library(robot_motion SHARED
 )
 
 add_library(Robot::Motion ALIAS robot_motion)
+
+target_link_libraries(robot_motion
+    ${catkin_LIBRARIES}
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
