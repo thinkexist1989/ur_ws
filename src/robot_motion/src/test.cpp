@@ -28,8 +28,15 @@ int main(int argc, char **argv)
     std::vector<KDL::JntArray> jntArrVec;
     std::vector<double> time_from_start;
     jntArrVec.push_back(joint_start);
-    time_from_start.push_back(50.0);
-    ur5e.MoveJ(jntArrVec, time_from_start);
+    time_from_start.push_back(6.0);
+    ur5e.MoveJ(jntArrVec, time_from_start, true);
+
+    // ros::Duration(2.0).sleep();
+
+    KDL::JntArray joint2(6);
+    joint2.data << 0.29629, -2.04182, -1.863, -0.855, 1.53311, 0.090;
+    ur5e.MoveJ(joint2, 3.0, true);
+
     while (ros::ok())
         ;
 

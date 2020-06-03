@@ -41,7 +41,8 @@ public:
     KDL::Wrench currentEndWrench;  // current end Wrench
     KDL::Wrench wrenchCalibration; // wrench calibration
 
-    void MoveJ(std::vector<KDL::JntArray> &jntArrVec, std::vector<double> &times); // MoveJ 关节空间移动
+    void MoveJ(std::vector<KDL::JntArray> &jntArrVec, std::vector<double> &times, bool waited = false); // MoveJ 关节空间移动 多个位置
+    void MoveJ(KDL::JntArray &jntArr, double time_from_start, bool waited = false);                     //MoveJ 关节空间移动 单个位置
 
 private:
     ros::NodeHandle _nh;                                            // ROS NodeHandler

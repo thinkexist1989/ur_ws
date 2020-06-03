@@ -178,7 +178,27 @@ void RobotMotion::subWrenchCallback(const geometry_msgs::WrenchStamped::ConstPtr
 //    -float64 velocity
 //    -float64 acceleration
 // -duration goal_time_tolerance
-void RobotMotion::MoveJ(std::vector<KDL::JntArray> &jntArrVec, std::vector<double> &time_from_start)
+void RobotMotion::MoveJ(KDL::JntArray &jntArr, double time_from_start, bool waited)
+{
+    control_msgs::FollowJointTrajectoryGoal g;
+    trajectory_msgs::JointTrajectoryPoint p;
+    for (int i = 0; i < _nrOfJoints; i++)
+    {
+        p.positions.push_back(jntArr(i));
+        // p.velocities.push_back(0);
+    }
+    p.time_from_start = ros::Duration(time_from_start);
+    g.trajectory.points.push_back(p);
+    g.trajectory.header.stamp = ros::Time::now();
+    g.trajectory.joint_names = _joint_names;
+
+    if (waited)
+        _jntTrajPtr->sendGoalAndWait(g);
+    else
+        _jntTrajPtr->sendGoal(g);
+}
+
+void RobotMotion::MoveJ(std::vector<KDL::JntArray> &jntArrVec, std::vector<double> &time_from_start, bool waited)
 {
     if (jntArrVec.size() != time_from_start.size())
     {
@@ -204,5 +224,8 @@ void RobotMotion::MoveJ(std::vector<KDL::JntArray> &jntArrVec, std::vector<doubl
     g.trajectory.header.stamp = ros::Time::now();
     g.trajectory.joint_names = _joint_names;
 
-    _jntTrajPtr->sendGoal(g);
+    if (waited)
+        _jntTrajPtr->sendGoalAndWait(g);
+    else
+        _jntTrajPtr->sendGoal(g);
 }
