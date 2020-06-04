@@ -28,6 +28,9 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
   tf2_eigen
   tf2_geometry_msgs
+  actionlib
+  actionlib_msgs
+  trac_ik_lib
 )
 
 ## System dependencies are found with CMake's conventions
@@ -57,7 +60,7 @@ endif()
 # set(QT_SRC src/main.cpp src/mainwindow.cpp)
 # set(QT_UI src/mainwindow.ui)
 # set(QT_HEADER src/mainwindow.h)
-set(SOURCE src/main.cpp)
+set(SOURCE src/main.cpp src/RobotMotion.cpp)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -160,7 +163,7 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
-  # ${PROJECT_SOURCE_DIR}/include
+  ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}
 )
 
 ## Declare a C++ library
