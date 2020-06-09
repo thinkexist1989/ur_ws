@@ -34,6 +34,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
   tf2_eigen
   tf2_geometry_msgs
+  trac_ik_lib
 )
 
 
@@ -179,7 +180,6 @@ link_directories(${catkin_LIBRARY_DIRS})
 add_executable(move_group_circle src/moveit_circle.cpp)
 add_executable(move_group_triangle src/moveit_triangle.cpp)
 add_executable(qt_dialog_test src/qt_dialog_test.cpp)
-
 add_executable(realtime_move src/realtime_move.cpp src/RobotMotion.cpp)
 
 ## Rename C++ executable without prefix

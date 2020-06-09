@@ -33,11 +33,14 @@ RobotMotion::RobotMotion(ros::NodeHandle nh_, std::string chainStart_, std::stri
     draw.data << -0.29629, -2.04182, -1.863, -0.855, 1.53311, 0.090; //
     KDL::JntArray write(6);                                          // write 位置
     write.data << 0.06360, -2.07364, 2.1302, -3.1982, -1.6344, 0.0;  //
+    KDL::JntArray imp(6);
+    imp.data << 0.041332, -2.022290, 2.367930, -1.916486, -1.570778, 0.041312; // impendance control 位置
 
     defaultPose.insert({"up", up});
     defaultPose.insert({"home", home});
     defaultPose.insert({"draw", draw});
     defaultPose.insert({"write", write});
+    defaultPose.insert({"imp", imp});
 
     wrenchCalibration.force = KDL::Vector(0, 0, 0); //力传感器矫正
     wrenchCalibration.torque = KDL::Vector(0, 0, 0);
@@ -195,7 +198,7 @@ void RobotMotion::subWrenchCallback(const geometry_msgs::WrenchStamped::ConstPtr
     // currentEndWrench.force = wrench2base * wrench_.force;
     // currentEndWrench.torque = wrench2base * wrench_.torque;
 
-    currentEndWrench = wrench_;
+    currentEndWrench = wrench_  - wrenchCalibration;
 
     // ROS_INFO("fx: %f, fy: %f, fz: %f, tx: %f, ty: %f, tz: %f", currentEndWrench.force.x(), currentEndWrench.force.y(), currentEndWrench.force.z(), currentEndWrench.torque.x(), currentEndWrench.torque.y(), currentEndWrench.torque.z());
 }

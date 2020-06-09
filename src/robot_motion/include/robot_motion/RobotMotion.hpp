@@ -51,7 +51,7 @@ public:
 
     std::map<std::string, KDL::JntArray> defaultPose; // 默认位置map容器
 
-private:
+public:
     ros::NodeHandle _nh;                                            // ROS NodeHandler
     std::unique_ptr<TRAC_IK::TRAC_IK> _tracIkSolverPtr;             // TRAC_IK Solver Pointer
     KDL::Chain _chain;                                              //KDL chain
