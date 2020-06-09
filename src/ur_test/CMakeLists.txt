@@ -156,6 +156,7 @@ include_directories(
   ${Boost_INCLUDE_DIR}
   ${EIGEN3_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
+  ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}
 )
 
 link_directories(${catkin_LIBRARY_DIRS})
@@ -179,6 +180,8 @@ add_executable(move_group_circle src/moveit_circle.cpp)
 add_executable(move_group_triangle src/moveit_triangle.cpp)
 add_executable(qt_dialog_test src/qt_dialog_test.cpp)
 
+add_executable(realtime_move src/realtime_move.cpp src/RobotMotion.cpp)
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -197,6 +200,8 @@ add_executable(qt_dialog_test src/qt_dialog_test.cpp)
 target_link_libraries(move_group_circle ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 target_link_libraries(move_group_triangle ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 target_link_libraries(qt_dialog_test Qt5::Widgets ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+target_link_libraries(realtime_move ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 #############
 ## Install ##
