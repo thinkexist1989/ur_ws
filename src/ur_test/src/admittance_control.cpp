@@ -32,9 +32,10 @@ int main(int argc, char **argv)
     // double kz = 200.0;
 
     //Z向单自由度阻抗测试的情况 kz=200.0, MoveJ time_from_start=0.2 效果不错
-    KDL::Vector k(400.0, 400.0, 400.0);
+    KDL::Vector k(500.0, 500.0, 500.0);
 
-    KDL::Frame curPose = ur5e.currentEndPose;
+    // KDL::Frame curPose = ur5e.currentEndPose;
+    ros::Rate rate(1000);
 
     while (ros::ok())
     {
@@ -46,15 +47,25 @@ int main(int argc, char **argv)
         // double fz = ur5e.currentEndWrench.force.z();
         // double delta_z = fz / k;
         ROS_INFO("x is: %f, y is: %f, z is: %f", f.x(), f.y(), f.z());
-        KDL::Frame pose = curPose;
-        pose.p.z(curPose.p.z() + delta_z);
-        pose.p.x(curPose.p.x() + delta_x);
-        pose.p.y(curPose.p.y() + delta_y);
-        if (ur5e._jntTrajPtr->getState() != actionlib::SimpleClientGoalState::SUCCEEDED)
+        KDL::Frame pose = ur5e.currentEndPose;
+        pose.p.z(pose.p.z() + delta_z);
+        pose.p.x(pose.p.x() + delta_x);
+        pose.p.y(pose.p.y() + delta_y);
+
+        if (ur5e._jntTrajPtr->getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
+        {
+            ;
+        }
+        else
         {
             ur5e._jntTrajPtr->cancelAllGoals();
         }
+
+        // ur5e._jntTrajPtr->stopTrackingGoal();
+        // ur5e._jntTrajPtr->cancelAllGoals();
         ur5e.MoveJ(pose, 0.4, ur5e.currentJntStates, false);
+
+        // rate.sleep();
     }
 
     ros::shutdown();
