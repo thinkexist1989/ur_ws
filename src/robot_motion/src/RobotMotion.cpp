@@ -306,3 +306,29 @@ void RobotMotion::MoveJ(KDL::Frame &endPose, double time_from_start, KDL::JntArr
 
     MoveJ(jntArr, time_from_start, waited);
 }
+
+void RobotMotion::MoveJ(std::vector<KDL::Frame> &endPoseVec, std::vector<double> &times, KDL::JntArray &jntInit, bool waited)
+{
+    if (endPoseVec.size() != times.size())
+    {
+        ROS_ERROR("ERROR::ACTION::GOAL SIZE IS NOT EQUAL");
+        return;
+    }
+    std::vector<KDL::JntArray> jntArrVec;
+    KDL::JntArray jntPrev = jntInit;
+    for(int i = 0; i < endPoseVec.size(); i++)
+    {
+        KDL::JntArray jntArr(_nrOfJoints);
+        int res = _tracIkSolverPtr->CartToJnt(jntPrev, endPoseVec[i], jntArr);
+        if(res < 0)
+        {
+            ROS_ERROR("ERROR::TRACK_IK::SOLVE_FAILED");
+            return;
+        }
+
+        jntArrVec.push_back(jntArr);
+        jntPrev = jntArr;
+    }
+
+    MoveJ(jntArrVec, times, waited);
+}

@@ -36,6 +36,8 @@ int main(int argc, char **argv)
 
     KDL::Frame curPose = ur5e.currentEndPose;
 
+    // ros::Rate rate(125);
+
     while (ros::ok())
     {
         /* code */
@@ -50,11 +52,13 @@ int main(int argc, char **argv)
         pose.p.z(curPose.p.z() + delta_z);
         pose.p.x(curPose.p.x() + delta_x);
         pose.p.y(curPose.p.y() + delta_y);
-        if (ur5e._jntTrajPtr->getState() != actionlib::SimpleClientGoalState::SUCCEEDED)
-        {
-            ur5e._jntTrajPtr->cancelAllGoals();
-        }
+        // if (ur5e._jntTrajPtr->getState() != actionlib::SimpleClientGoalState::SUCCEEDED)
+        // {
+        //     ur5e._jntTrajPtr->cancelAllGoals();
+        // }
         ur5e.MoveJ(pose, 0.4, ur5e.currentJntStates, false);
+
+        // rate.sleep();
     }
 
     ros::shutdown();
