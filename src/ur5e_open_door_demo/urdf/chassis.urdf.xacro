@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<robot name="chassis" xmlns:xacro="http://wiki.ros.rog/xacro">
+
+    <xacro:include filename="$(find ur5e_with_open_door_demo)/urdf/chassis.gazebo.xacro" />
+
+    <xacro:macro name="chassis_cylinder" params="link_name radius length mass">
+        <link name="${link_name}">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <cylinder radius="${radius}" length="${length}" />
+                </geometry>
+                <material name="black">
+                    <color rgba="0 0 0 1" />
+                </material>
+            </visual>
+
+            <inertial>
+                <origin xyz="0 0 0" />
+                <mass value="${mass}" />
+                <inertia ixx="${mass/12*(3*radius*radius+length*length)}" ixy="0.0" ixz="0.0" iyy="${mass/12*(3*radius*radius+length*length)}" iyz="0.0" izz="${mass*radius*radius/2}" />
+            </inertial>
+
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <cylinder radius="${radius}" length="${length}" />
+                </geometry>
+            </collision>
+        </link>
+    </xacro:macro>
+
+    <xacro:macro name="chassis" params="prefix:=chassis_">
+
+        <xacro:chassis_cylinder link_name="${prefix}bottom_pan" radius="0.35" length="0.018" mass="10" />
+        <xacro:chassis_cylinder link_name="${prefix}connect_pan" radius="0.05" length="0.57" mass="10" />
+        <xacro:chassis_cylinder link_name="${prefix}up_pan" radius="0.08" length="0.018" mass="2" />
+
+        <!-- link robot for ur5e with chassis -->
+        <link name="${prefix}robot" />
+        <link name="${prefix}world" />
+
+        <joint name="world_bottom_joint" type="fixed">
+            <origin xyz="0 0 0.009" rpy="0 0 0" />
+            <parent link="${prefix}world" />
+            <child link="${prefix}bottom_pan" />
+        </joint>
+
+        <joint name="bottom_connect_joint" type="fixed">
+            <origin xyz="0 0 0.294" rpy="0 0 0" />
+            <parent link="${prefix}bottom_pan" />
+            <child link="${prefix}connect_pan" />
+        </joint>
+
+        <joint name="connect_up_joint" type="fixed">
+            <origin xyz="0 0 0.294" rpy="0 0 0" />
+            <parent link="${prefix}connect_pan" />
+            <child link="${prefix}up_pan" />
+        </joint>
+
+        <joint name="up_robot_joint" type="fixed">
+            <origin xyz="0 0 0.009" rpy="0 0 0" />
+            <parent link="${prefix}up_pan" />
+            <child link="${prefix}robot" />
+        </joint>
+
+    </xacro:macro>
+</robot>

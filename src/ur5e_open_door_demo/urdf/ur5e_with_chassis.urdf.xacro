@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="ur5e_with_chassis">
+    <!-- macro:chassis include-->
+    <xacro:include filename="$(find ur5e_open_door_demo)/urdf/chassis.urdf.xacro" />
+    <!-- macro:ur5e_robot include -->
+    <xacro:include filename="$(find ur_e_description)/urdf/common.gazebo.xacro" /> <!-- common stuff -->
+    <xacro:include filename="$(find ur_e_description)/urdf/ur5e.urdf.xacro" /> <!-- ur5e -->
+
+    <!-- chassis -->
+    <xacro:property name="prefix_chassis" value="chassis_" />
+    <xacro:chassis prefix="${prefix_chassis}" />
+    <!-- ur5e_robot -->
+    <xacro:property name="prefix_robot" value="" />
+    <xacro:arg name="kinematics_config" default="$(find ur_e_description)/config/ur5e_default.yaml" />
+    <xacro:ur5e_robot prefix="${prefix_robot}" joint_limited="false" kinematics_file="${load_yaml('$(arg kinematics_config)')}" />
+
+    <joint name="chassis_robot_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="${prefix_chassis}robot" />
+        <child link="${prefix_robot}base_link" />
+    </joint>
+</robot>

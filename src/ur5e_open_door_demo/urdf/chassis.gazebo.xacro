@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="chassis_gazebo" params="prefix_chassis">
+
+    <gazebo reference="${prefix_chassis}bottom_pan">
+      <selfCollide>true</selfCollide>
+      <material>Gazebo/Black</material>
+    </gazebo>
+    <gazebo reference="${prefix_chassis}connect_pan">
+      <selfCollide>true</selfCollide>
+      <material>Gazebo/Black</material>
+    </gazebo>
+    <gazebo reference="${prefix_chassis}up_pan">
+      <selfCollide>true</selfCollide>
+      <material>Gazebo/Black</material>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>

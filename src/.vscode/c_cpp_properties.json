@@ -1,0 +1,29 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/think/ur_ws/devel/include/**",
+        "/opt/ros/melodic/include/**",
+        "/home/think/ur_ws/src/arm_control_gui/include/**",
+        "/home/think/ur_ws/src/arm_mouse_control/include/**",
+        "/home/think/ur_ws/src/Universal_Robots_ROS_Driver/controller_stopper/include/**",
+        "/home/think/ur_ws/src/force_control/include/**",
+        "/home/think/ur_ws/src/impedance_controller/include/**",
+        "/home/think/ur_ws/src/realsense-ros/realsense2_camera/include/**",
+        "/home/think/ur_ws/src/robot_motion/include/**",
+        "/home/think/ur_ws/src/ur5_e_ikfast_manipulator_plugin/include/**",
+        "/home/think/ur_ws/src/Universal_Robots_ROS_Driver/ur_calibration/include/**",
+        "/home/think/ur_ws/src/Universal_Robots_ROS_Driver/ur_controllers/include/**",
+        "/home/think/ur_ws/src/fmauch_universal_robot/ur_kinematics/include/**",
+        "/home/think/ur_ws/src/Universal_Robots_ROS_Driver/ur_robot_driver/include/**",
+        "/home/think/ur_ws/src/ur_test/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+<launch>
+    <arg name="model" default="$(find xacro)/xacro --inorder '$(find ur5e_open_door_demo)/urdf/ur5e_with_chassis.urdf.xacro'" />
+    <param name="robot_description" command="$(arg model)" />
+
+    <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find ur5e_open_door_demo)/config/urdf.rviz" required="true" />
+</launch>
