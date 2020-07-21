@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot name="chassis" xmlns:xacro="http://wiki.ros.rog/xacro">
 
-    <xacro:include filename="$(find ur5e_with_open_door_demo)/urdf/chassis.gazebo.xacro" />
+    <xacro:include filename="$(find ur5e_open_door_demo)/urdf/chassis.gazebo.xacro" />
 
     <xacro:macro name="chassis_cylinder" params="link_name radius length mass">
         <link name="${link_name}">
