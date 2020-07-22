@@ -91,10 +91,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        chassis_world:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         ee_link:
           Alpha: 1
           Show Axes: false
@@ -119,6 +115,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        world:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         wrist_1_link:
           Alpha: 1
           Show Axes: false
@@ -144,7 +144,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: chassis_world
+    Fixed Frame: world
     Frame Rate: 30
   Name: root
   Tools:
@@ -183,10 +183,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: -0.10520316660404205
+      Pitch: -0.0652029737830162
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.2735691964626312
+      Yaw: 0.3485696613788605
     Saved: ~
 Window Geometry:
   Displays:
@@ -205,4 +205,4 @@ Window Geometry:
     collapsed: false
   Width: 1200
   X: 797
-  Y: 115
+  Y: 85

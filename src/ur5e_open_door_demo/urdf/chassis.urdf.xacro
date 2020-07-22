@@ -38,11 +38,12 @@
 
         <!-- link robot for ur5e with chassis -->
         <link name="${prefix}robot" />
-        <link name="${prefix}world" />
+        <!-- using in Gazebo to Fixed-->
+        <link name="world" />
 
         <joint name="world_bottom_joint" type="fixed">
             <origin xyz="0 0 0.009" rpy="0 0 0" />
-            <parent link="${prefix}world" />
+            <parent link="world" />
             <child link="${prefix}bottom_pan" />
         </joint>
 
@@ -63,6 +64,8 @@
             <parent link="${prefix}up_pan" />
             <child link="${prefix}robot" />
         </joint>
+
+        <xacro:chassis_gazebo prefix_chassis="${prefix}" />
 
     </xacro:macro>
 </robot>
