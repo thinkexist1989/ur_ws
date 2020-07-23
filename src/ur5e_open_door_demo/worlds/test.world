@@ -27,6 +27,7 @@
     <include>
       <uri>model://hinged_door</uri>
       <pose frame=''>0.5 -0.6 0 0 0 1.5707</pose>
+      <name>hinged_door2</name>
     </include>
 
     <gui fullscreen='0'>
