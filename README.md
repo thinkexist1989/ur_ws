@@ -2,7 +2,7 @@
 
 This is my ROS workspace which contains some packages related to Universal Robot e-series.
 
-==!!!WARNING== THE CODE IS NOT CLEAN UP, POOR WRITTEN, JUST FOR TEST AND DEBUG!!
+:warning: :warning: :warning: !!!WARNING!!! THE CODE IS NOT CLEAN UP, POOR WRITTEN, JUST FOR TEST AND DEBUG!!
 
 
 
@@ -12,8 +12,6 @@ This is my ROS workspace which contains some packages related to Universal Robot
 - `fmauch_universal_robot` Universal Robot Meta Packages. Download from https://github.com/fmauch/universal_robot/tree/calibration_devel
 - `arm_control_gui`
 - `arm_mouse_control`
-- `force_control`
-- `plan`
 - `kinect_v2_urdf`
 - `realsense_ros`
 - `impendance_controller`
